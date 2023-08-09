@@ -1,7 +1,9 @@
 FROM ubuntu:18.04
 
-ENV TOP /riscv/
-ENV RISCV /riscv/build/
+ARG UID=1000
+
+RUN addgroup riscv && useradd -m -g riscv -u ${UID} riscv
+
 ENV PATH /opt/riscv/bin:${PATH}
 
 RUN apt-get update
@@ -34,3 +36,6 @@ RUN apt-get install -y \
 RUN cd /riscv/ && ./configure --prefix=/opt/riscv --enable-multilib
 RUN cd /riscv/ && make linux -j4
 RUN rm -rf /riscv
+
+USER riscv
+WORKDIR /home/riscv
